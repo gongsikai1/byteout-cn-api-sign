@@ -44,6 +44,8 @@ t.headers["X-Signature"] = Jp(t.params, t.data, n, o)
 console.log('t', t)
 
 // 新增定时请求函数
+// const randomNumber = 2000
+const randomNumber = Math.floor(Math.random() * 3001) + 2000;
 setInterval(() => {
     // 每次请求生成新的时间戳和随机数
     const newTimestamp = Date.now();
@@ -64,4 +66,4 @@ setInterval(() => {
     .catch(error => {
         console.error(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
     });
-}, 2000); // 每2秒执行一次
+}, randomNumber); // 随机时间间隔执行
