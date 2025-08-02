@@ -58,7 +58,10 @@ setInterval(() => {
 
     // 发送GET请求
     axios.get('https://www.byteout.cn/api/auth/captcha', {
-        headers: t.headers
+        headers: {
+            ...t.headers,
+            hello: Math.random().toString(36).substring(2, 10)
+        }
     })
     .then(response => {
         console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status);
