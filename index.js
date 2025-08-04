@@ -70,7 +70,9 @@ setInterval(async () => {
     //     console.error(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
     // });
 
-    axios.get('https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET', {
+    // const url = 'https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET'
+    const url = 'https://byteout.cn/api/auth/captcha'
+    axios.get(url, {
         headers: {
             ...t.headers,
             hello: Math.random().toString(36).substring(2, 10)
