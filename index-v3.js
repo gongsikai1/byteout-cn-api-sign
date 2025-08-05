@@ -406,23 +406,39 @@ const init = async () => {
         componentsToDebugString: Ul
     };
 
-    const getVisitId = () => `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`
+    // 每第50次访问getVisitId生成一次新visitorId
+    // let requestCount = 0;
+    // const getVisitId = () => {
+        
+    //     return `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`
+    // }
+    let requestCount = 0;
+    let visitorId = null; // 新增变量存储visitorId
+    const getVisitId = () => {
+        requestCount++;
+        // 第50次访问或首次访问时生成新visitorId
+        if (requestCount >= 50 || !visitorId) {
+            visitorId = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
+            requestCount = 0; // 重置计数器
+        }
+        return visitorId;
+    }
 
     Om = async () => {
-        console.log('1')
+        // console.log('1')
         // let = t = {}
         // try {
         //     t = await (await Lm.load()).get()
         // } catch (e) {
         //     console.log('ee', e)
         // }
-        console.log('t')
+        // console.log('t')
         // 生成visitorId，值为随机的32位的数字或字母
         // const visitorId8 = Math.random().toString(36).substring(2, 10)
         const visitorId = getVisitId();
         const t = {"visitorId": visitorId, "confidence": { score: 0.9 },"timestamp":1754273741977,"nonce":"978b7e7a9ddb363bec02be7e8c98419f","signature":"ef30943e6ce7ad82e30ae6470009aa7da17cf07b85353c0b17d2a5e4890243f3"}
-        console.log('uo')
-        console.log('uo', u0())
+        // console.log('uo')
+        // console.log('uo', u0())
         const r = {
             visitorId: t.visitorId,
             confidence: t.confidence.score,
@@ -430,14 +446,14 @@ const init = async () => {
             nonce: u0(),
             signature: ""
         };
-        console.log('v1', r)
+        // console.log('v1', r)
         try {
-            console.log('v1', Vl(r))
+            // console.log('v1', Vl(r))
         } catch (e) {
-            console.log('e', e)
+            // console.log('e', e)
         }
         r.signature = Vl(r);
-        console.log('r', r)
+        // console.log('r', r)
         deviceFingerPrint = JSON.stringify(r)
     }
 
@@ -484,9 +500,11 @@ const init = async () => {
 
     // 新增定时请求函数
     // const randomNumber = 2000 * 30
-    const randomNumber = 2000
+    // 生成1ms到2000ms的随机数
+    let randomNumber = Math.floor(Math.random() * 2000) + 1;
+    // let randomNumber = 1364
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
-    setInterval(async () => {
+    const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
         const newTimestamp = Date.now();
         const newNonce = Math.random().toString(36).substring(2, 10);
@@ -518,6 +536,10 @@ const init = async () => {
         // console.log('proxyInfo', proxyInfo)
         axios.get(url, {
             headers: {
+                "authority": "byteout.cn",
+                "method": "GET",
+                "path": "/api/auth/captcha",
+                "scheme": "https",
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9",
                 "cache-control": "no-cache",
@@ -534,7 +556,8 @@ const init = async () => {
                 "Referer": "https://byteout.cn/login",
                 "Referrer-Policy": "strict-origin-when-cross-origin",
                 ...t.headers,
-                hello: Math.random().toString(36).substring(2, 10)
+                hello: Math.random().toString(36).substring(2, 10),
+                [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
             },
             ...(USE_PROXY ? { httpsAgent: proxyInfo } : {}), // 绑定代理
         })
