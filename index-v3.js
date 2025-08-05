@@ -417,10 +417,11 @@ const init = async () => {
     const getVisitId = () => {
         requestCount++;
         // 第50次访问或首次访问时生成新visitorId
-        if (requestCount >= 50 || !visitorId) {
+        if (requestCount >= 10 || !visitorId) {
             visitorId = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
             requestCount = 0; // 重置计数器
         }
+        // visitorId = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
         return visitorId;
     }
 
@@ -462,7 +463,7 @@ const init = async () => {
     // deviceFingerPrint = {"visitorId":"05c6a60e638b533b527d71ccbba40479","confidence":0.6,"timestamp":1754270961272,"nonce":"e767a7a556d8a34c9f01dec792f05ab9","signature":"340295029406afe14bfd668ca3a812b116a931be73da69684883fc9b571c5eac"}
 
     Im = () => {
-        // Om()
+        Om()
         // const e = localStorage.getItem('device_fingerprint');
         const e = deviceFingerPrint;
         console.log('e', e)
@@ -501,8 +502,8 @@ const init = async () => {
     // 新增定时请求函数
     // const randomNumber = 2000 * 30
     // 生成1ms到2000ms的随机数
-    let randomNumber = Math.floor(Math.random() * 2000) + 1;
-    // let randomNumber = 1364
+    // let randomNumber = Math.floor(Math.random() * 2000) + 1;
+    let randomNumber = 3111
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
     const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
@@ -547,13 +548,13 @@ const init = async () => {
                 "priority": "u=1, i",
                 // "req-device-fingerprint": "05c6a60e638b533b527d71ccbba40479/0.6/1754363102353/2edd02c20acd8707f555f0ae4726554a/7547c6431a60b87c91dbff17a30321326cec538120937e4bf334f33a0913afee",
                 // "req-signature": "3af932b2c66b578cc1802b7a1ea4ee52/1754363102353/aaa34d58511649bbffd3001efc564f1f4a7c5d7c00288830d85aec9c9478d442",
-                "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
+                "sec-ch-ua": `\"Google Chrome ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
                 "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"Windows\"",
+                "sec-ch-ua-platform": `\"Windows ${Math.random()}\"`,
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
-                "Referer": "https://byteout.cn/login",
+                "Referer": "https://byteout.cn/api/auth/captcha",
                 "Referrer-Policy": "strict-origin-when-cross-origin",
                 ...t.headers,
                 hello: Math.random().toString(36).substring(2, 10),
