@@ -383,6 +383,8 @@ var Lm = {
     componentsToDebugString: Ul
 };
 
+const getVisitId = () => `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`
+
 Om = async () => {
     console.log('1')
     // let = t = {}
@@ -394,7 +396,7 @@ Om = async () => {
     console.log('t')
     // 生成visitorId，值为随机的32位的数字或字母
     // const visitorId8 = Math.random().toString(36).substring(2, 10)
-    const visitorId = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
+    const visitorId = getVisitId();
     const t = {"visitorId": visitorId, "confidence": { score: 0.9 },"timestamp":1754273741977,"nonce":"978b7e7a9ddb363bec02be7e8c98419f","signature":"ef30943e6ce7ad82e30ae6470009aa7da17cf07b85353c0b17d2a5e4890243f3"}
     console.log('uo')
     console.log('uo', u0())
@@ -421,6 +423,7 @@ Om()
 // deviceFingerPrint = {"visitorId":"05c6a60e638b533b527d71ccbba40479","confidence":0.6,"timestamp":1754270961272,"nonce":"e767a7a556d8a34c9f01dec792f05ab9","signature":"340295029406afe14bfd668ca3a812b116a931be73da69684883fc9b571c5eac"}
 
 Im = () => {
+    // Om()
     // const e = localStorage.getItem('device_fingerprint');
     const e = deviceFingerPrint;
     console.log('e', e)
@@ -458,7 +461,8 @@ console.log('t', t)
 
 // 新增定时请求函数
 // const randomNumber = 2000 * 30
-const randomNumber = Math.floor(Math.random() * 3001) + 2000;
+const randomNumber = 20
+// const randomNumber = Math.floor(Math.random() * 3001) + 2000;
 setInterval(async () => {
     // 每次请求生成新的时间戳和随机数
     const newTimestamp = Date.now();
