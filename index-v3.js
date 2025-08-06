@@ -503,7 +503,7 @@ const init = async () => {
     // const randomNumber = 2000 * 30
     // 生成1ms到2000ms的随机数
     // let randomNumber = Math.floor(Math.random() * 2000) + 1;
-    let randomNumber = 3111
+    let randomNumber = 1
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
     const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
@@ -566,7 +566,7 @@ const init = async () => {
             console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status, response.data);
         })
         .catch(error => {
-            console.error(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
+            console.log(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
         });
 
         // const res = await fetch("https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET", {
