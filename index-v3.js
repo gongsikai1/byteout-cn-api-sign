@@ -31,6 +31,8 @@ const init = async () => {
         enc: CryptoJS.enc.Hex
     }
 
+    const Eg = e => e == null ? "" : Array.isArray(e) ? e.map(t => t != null ? t.toString() : "").join(",") : e.toString()
+
     // _g = "8D7F2A9C4E5B1F3A6C9D2E8F7B1A5C3D"
     const gg = (e={}, t={}) => {
         const r = Date.now()
@@ -51,12 +53,13 @@ const init = async () => {
         }).join("/")
     }
 
-    Jp = (e={}, t={}, r, n) => {
+    const Jp = (e={}, t={}, r, n) => {
         const o = {
             ...e,
             ...t
         }
-        , s = Object.entries(o).map( ([l,u]) => [l, Zp(u)]).sort( (l, u) => l[0].localeCompare(u[0])).map( ([l,u]) => `${l}=${u}`).join("&")
+        console.log('o', o)
+        const s = Object.entries(o).map( ([l,u]) => [l, Zp(u)]).sort( (l, u) => l[0].localeCompare(u[0])).map( ([l,u]) => `${l}=${u}`).join("&")
         , i = [];
         s && i.push(s),
         i.push(`timestamp=${r}`, `nonce=${n}`);
@@ -484,26 +487,29 @@ const init = async () => {
             "X-Nonce": o,
             "X-Signature": '',
             'Req-Signature': '',
-            "Req-Device-Fingerprint": Im()
+            "Req-Device-Fingerprint": Im(),
+            "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
         },
         params: {
-
+            size: 3000,
+            current: 1,
+            title: '',
         },
         data: {
 
         }
     }
 
-    t.headers["X-Timestamp"] = n,
-    t.headers["X-Nonce"] = o,
-    t.headers["X-Signature"] = Jp(t.params, t.data, n, o)
+    // t.headers["X-Timestamp"] = n,
+    // t.headers["X-Nonce"] = o,
+    // t.headers["X-Signature"] = Jp(t.params, t.data, n, o)
     console.log('t', t)
 
     // 新增定时请求函数
     // const randomNumber = 2000 * 30
     // 生成1ms到2000ms的随机数
     // let randomNumber = Math.floor(Math.random() * 2000) + 1;
-    let randomNumber = 1
+    let randomNumber = 2001
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
     const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
@@ -533,13 +539,14 @@ const init = async () => {
         // });
 
         // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
-        const url = 'https://byteout.cn/api/auth/captcha'
+        // const url = 'https://byteout.cn/api/auth/captcha'
+        const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
         // console.log('proxyInfo', proxyInfo)
         axios.get(url, {
             headers: {
                 "authority": "byteout.cn",
                 "method": "GET",
-                "path": "/api/auth/captcha",
+                "path": "/api/article/page",
                 "scheme": "https",
                 "accept": "application/json, text/plain, */*",
                 "accept-language": "zh-CN,zh;q=0.9",
@@ -554,8 +561,9 @@ const init = async () => {
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
-                "Referer": "https://byteout.cn/api/auth/captcha",
+                "Referer": "https://byteout.cn/api/article/page",
                 "Referrer-Policy": "strict-origin-when-cross-origin",
+                // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
                 ...t.headers,
                 hello: Math.random().toString(36).substring(2, 10),
                 [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
