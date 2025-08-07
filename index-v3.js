@@ -488,7 +488,16 @@ const init = async () => {
             "X-Signature": '',
             'Req-Signature': '',
             "Req-Device-Fingerprint": Im(),
-            "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
+            
+            // b.e.lv.illevir.g.o@gmail.com
+            "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMiwic3ViIjoiMTAyIiwiaWF0IjoxNzU0NTQ0ODgyLCJleHAiOjE3NTUxNDk2ODJ9.NAla22ljZWapkJFO2zpR-Tb2aeb-lit-VXyUT3cI5JnxbTuL5JvByL70cVbm6uxNlPMjFUTOYvrN3kyNl3JoTg",
+
+
+            // s.j.s.bca.ksg.g.sk.sv@gmail.com
+            // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMSwic3ViIjoiMTAxIiwiaWF0IjoxNzU0NTM4MDQ3LCJleHAiOjE3NTUxNDI4NDd9.tKd06eAGNwxMD56b8O5XZvu_FOSADk8Hk_J6iQOgBR_Ki6QfJ2-T0ZmCQUr9IbY9m4vY5YzuhwowQlMUqzlysw",
+            
+            // d.ndng.zm.s.nfsm.b.t@gmail.com
+            // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
         },
         params: {
             size: 3000,
@@ -509,7 +518,7 @@ const init = async () => {
     // const randomNumber = 2000 * 30
     // 生成1ms到2000ms的随机数
     // let randomNumber = Math.floor(Math.random() * 2000) + 1;
-    let randomNumber = 2001
+    let randomNumber = 1
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
     const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
@@ -541,6 +550,7 @@ const init = async () => {
         // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
         // const url = 'https://byteout.cn/api/auth/captcha'
         const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
+        if (!proxyInfo) return ;
         // console.log('proxyInfo', proxyInfo)
         axios.get(url, {
             headers: {
