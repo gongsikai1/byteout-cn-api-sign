@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@koa/cors": "^5.0.0",
     "axios": "^1.11.0",
     "crypto-js": "^4.2.0",
     "https-proxy-agent": "^7.0.6",

@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const Router = require('koa-router');
+const Router = require('koa-router');
 const axios = require('axios');
 var CryptoJS = require("crypto-js");
 
@@ -639,6 +640,13 @@ router.get('/sign', async (ctx) => {
     //     // console.log('res', res.body)
     // }, randomNumber); // 随机时间间隔执行
 });
+
+// 添加跨域中间件
+app.use(cors({
+  origin: '*', // 允许所有域，生产环境建议指定具体域名
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'], // 允许的请求方法
+  allowHeaders: ['Content-Type', 'Authorization', 'Req-Signature', 'Req-Device-Fingerprint'], // 允许的请求头
+}));
 
 app.use(router.routes());
 app.use(router.allowedMethods());
