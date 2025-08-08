@@ -1,6 +1,6 @@
 const Koa = require('koa');
 const Router = require('koa-router');
-const Router = require('koa-router');
+const cors = require('@koa/cors'); // 新增跨域中间件
 const axios = require('axios');
 var CryptoJS = require("crypto-js");
 
