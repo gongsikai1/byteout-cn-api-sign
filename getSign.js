@@ -20,15 +20,15 @@ router.get('/sign', async (ctx) => {
     // setInterval首先立即执行一次怎么写
 
     // const getProxy = async () => {
-    proxyInfo = await getHTTPSProxy();
+    // proxyInfo = await getHTTPSProxy();
     // }
 
     console.log('proxyInfo', proxyInfo)
 
-    setInterval(async () => {
-    proxyInfo = await getHTTPSProxy();
-    console.log('proxyInfo', proxyInfo)
-    }, 1000 * 60)
+    // setInterval(async () => {
+    // proxyInfo = await getHTTPSProxy();
+    // console.log('proxyInfo', proxyInfo)
+    // }, 1000 * 60)
 
     Kp = '8D7F2A9C4E5B1F3A6C9D2E8F7B1A5C3D'
 
