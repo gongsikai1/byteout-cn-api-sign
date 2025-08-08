@@ -1,9 +1,14 @@
+const Koa = require('koa');
+const Router = require('koa-router');
 const axios = require('axios');
 var CryptoJS = require("crypto-js");
 
 const getHTTPSProxy = require('./httpsProxy');
 
-const init = async () => {
+const app = new Koa();
+const router = new Router();
+
+router.get('/sign', async (ctx) => {
 
     const USE_PROXY = true
 
@@ -524,101 +529,121 @@ const init = async () => {
     // 生成1ms到2000ms的随机数
     // let randomNumber = Math.floor(Math.random() * 2000) + 1;
     let randomNumber = 1
+
+    const newTimestamp = Date.now();
+    const newNonce = Math.random().toString(36).substring(2, 10);
+    t.headers['Req-Signature'] = gg(t.params, t.data, newTimestamp, newNonce);
+    t.headers["Req-Device-Fingerprint"] = Im();
+
+    ctx.body = {
+      status: 0,
+      data: {
+        'Req-Signature': t.headers['Req-Signature'],
+        'Req-Device-Fingerprint': t.headers["Req-Device-Fingerprint"]
+      }
+    };
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
-    const timeId = setInterval(async () => {
-        // 每次请求生成新的时间戳和随机数
-        const newTimestamp = Date.now();
-        const newNonce = Math.random().toString(36).substring(2, 10);
+    // const timeId = setInterval(async () => {
+    //     // 每次请求生成新的时间戳和随机数
+    //     const newTimestamp = Date.now();
+    //     const newNonce = Math.random().toString(36).substring(2, 10);
         
-        // 更新请求头
-        // t.headers["X-Timestamp"] = newTimestamp;
-        // t.headers["X-Nonce"] = newNonce;
-        // t.headers["X-Signature"] = Jp(t.params, t.data, newTimestamp, newNonce);
-        t.headers['Req-Signature'] = gg(t.params, t.data, newTimestamp, newNonce);
-        t.headers["Req-Device-Fingerprint"] = Im();
-        // t.headers['Referer'] = 'https://byteout.cn/api/auth/captcha'
+    //     // 更新请求头
+    //     // t.headers["X-Timestamp"] = newTimestamp;
+    //     // t.headers["X-Nonce"] = newNonce;
+    //     // t.headers["X-Signature"] = Jp(t.params, t.data, newTimestamp, newNonce);
+    //     t.headers['Req-Signature'] = gg(t.params, t.data, newTimestamp, newNonce);
+    //     t.headers["Req-Device-Fingerprint"] = Im();
+    //     // t.headers['Referer'] = 'https://byteout.cn/api/auth/captcha'
 
-        // 发送GET请求
-        // axios.get('https://www.byteout.cn/api/auth/captcha', {
-        //     headers: {
-        //         ...t.headers,
-        //         hello: Math.random().toString(36).substring(2, 10)
-        //     }
-        // })
-        // .then(response => {
-        //     console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status);
-        // })
-        // .catch(error => {
-        //     console.error(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
-        // });
+    //     // 发送GET请求
+    //     // axios.get('https://www.byteout.cn/api/auth/captcha', {
+    //     //     headers: {
+    //     //         ...t.headers,
+    //     //         hello: Math.random().toString(36).substring(2, 10)
+    //     //     }
+    //     // })
+    //     // .then(response => {
+    //     //     console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status);
+    //     // })
+    //     // .catch(error => {
+    //     //     console.error(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
+    //     // });
 
-        // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
-        // const url = 'https://byteout.cn/api/auth/captcha'
-        const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
-        if (!proxyInfo) return ;
-        // console.log('proxyInfo', proxyInfo)
+    //     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
+    //     // const url = 'https://byteout.cn/api/auth/captcha'
+    //     const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
+    //     if (!proxyInfo) return ;
+    //     // console.log('proxyInfo', proxyInfo)
 
-        console.log('t.headers', t.headers)
-        axios.get(url, {
-            headers: {
-                "authority": "byteout.cn",
-                "method": "GET",
-                "path": "/api/article/page",
-                "scheme": "https",
-                "accept": "application/json, text/plain, */*",
-                "accept-language": "zh-CN,zh;q=0.9",
-                "cache-control": "no-cache",
-                "pragma": "no-cache",
-                "priority": "u=1, i",
-                // "req-device-fingerprint": "05c6a60e638b533b527d71ccbba40479/0.6/1754363102353/2edd02c20acd8707f555f0ae4726554a/7547c6431a60b87c91dbff17a30321326cec538120937e4bf334f33a0913afee",
-                // "req-signature": "3af932b2c66b578cc1802b7a1ea4ee52/1754363102353/aaa34d58511649bbffd3001efc564f1f4a7c5d7c00288830d85aec9c9478d442",
-                "sec-ch-ua": `\"Google Chrome ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": `\"Windows ${Math.random()}\"`,
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-origin",
-                "Referer": "https://byteout.cn/article/manage",
-                "Referrer-Policy": "strict-origin-when-cross-origin",
-                // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
-                ...t.headers,
-                hello: Math.random().toString(36).substring(2, 10),
-                [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
-            },
-            ...(USE_PROXY ? { httpsAgent: proxyInfo } : {}), // 绑定代理
-        })
-        .then(response => {
-            console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status, response.data);
-        })
-        .catch(error => {
-            console.log(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
-        });
+    //     console.log('t.headers', t.headers)
+    //     axios.get(url, {
+    //         headers: {
+    //             "authority": "byteout.cn",
+    //             "method": "GET",
+    //             "path": "/api/article/page",
+    //             "scheme": "https",
+    //             "accept": "application/json, text/plain, */*",
+    //             "accept-language": "zh-CN,zh;q=0.9",
+    //             "cache-control": "no-cache",
+    //             "pragma": "no-cache",
+    //             "priority": "u=1, i",
+    //             // "req-device-fingerprint": "05c6a60e638b533b527d71ccbba40479/0.6/1754363102353/2edd02c20acd8707f555f0ae4726554a/7547c6431a60b87c91dbff17a30321326cec538120937e4bf334f33a0913afee",
+    //             // "req-signature": "3af932b2c66b578cc1802b7a1ea4ee52/1754363102353/aaa34d58511649bbffd3001efc564f1f4a7c5d7c00288830d85aec9c9478d442",
+    //             "sec-ch-ua": `\"Google Chrome ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
+    //             "sec-ch-ua-mobile": "?0",
+    //             "sec-ch-ua-platform": `\"Windows ${Math.random()}\"`,
+    //             "sec-fetch-dest": "empty",
+    //             "sec-fetch-mode": "cors",
+    //             "sec-fetch-site": "same-origin",
+    //             "Referer": "https://byteout.cn/article/manage",
+    //             "Referrer-Policy": "strict-origin-when-cross-origin",
+    //             // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
+    //             ...t.headers,
+    //             hello: Math.random().toString(36).substring(2, 10),
+    //             [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
+    //         },
+    //         ...(USE_PROXY ? { httpsAgent: proxyInfo } : {}), // 绑定代理
+    //     })
+    //     .then(response => {
+    //         console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status, response.data);
+    //     })
+    //     .catch(error => {
+    //         console.log(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
+    //     });
 
 
-        // const res = await fetch("https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET", {
-        // "headers": {
-        //     "accept": "application/json, text/plain, */*",
-        //     "accept-language": "zh-CN,zh;q=0.9",
-        //     "cache-control": "no-cache",
-        //     "pragma": "no-cache",
-        //     "priority": "u=1, i",
-        //     "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
-        //     "sec-ch-ua-mobile": "?0",
-        //     "sec-ch-ua-platform": "\"Windows\"",
-        //     "sec-fetch-dest": "empty",
-        //     "sec-fetch-mode": "cors",
-        //     "sec-fetch-site": "same-origin",
-        //     "x-nonce": `${newNonce}`,
-        //     "x-signature": `${t.headers["X-Signature"]}`,
-        //     "x-timestamp": `${newTimestamp}`,
-        //     "Referer": "https://www.byteout.cn/password-reset",
-        //     "Referrer-Policy": "strict-origin-when-cross-origin",
-        //     // ...t.headers,
-        // },
-        // "body": null,
-        // "method": "GET"
-        // });
-        // console.log('res', res.body)
-    }, randomNumber); // 随机时间间隔执行
-}
-init()
+    //     // const res = await fetch("https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET", {
+    //     // "headers": {
+    //     //     "accept": "application/json, text/plain, */*",
+    //     //     "accept-language": "zh-CN,zh;q=0.9",
+    //     //     "cache-control": "no-cache",
+    //     //     "pragma": "no-cache",
+    //     //     "priority": "u=1, i",
+    //     //     "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
+    //     //     "sec-ch-ua-mobile": "?0",
+    //     //     "sec-ch-ua-platform": "\"Windows\"",
+    //     //     "sec-fetch-dest": "empty",
+    //     //     "sec-fetch-mode": "cors",
+    //     //     "sec-fetch-site": "same-origin",
+    //     //     "x-nonce": `${newNonce}`,
+    //     //     "x-signature": `${t.headers["X-Signature"]}`,
+    //     //     "x-timestamp": `${newTimestamp}`,
+    //     //     "Referer": "https://www.byteout.cn/password-reset",
+    //     //     "Referrer-Policy": "strict-origin-when-cross-origin",
+    //     //     // ...t.headers,
+    //     // },
+    //     // "body": null,
+    //     // "method": "GET"
+    //     // });
+    //     // console.log('res', res.body)
+    // }, randomNumber); // 随机时间间隔执行
+});
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+app.listen(9996, () => {
+  console.log('Server running on http://localhost:9996');
+//   startTimedRequests(); // 启动定时请求
+});
