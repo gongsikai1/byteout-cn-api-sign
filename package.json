@@ -3,6 +3,7 @@
     "@koa/cors": "^5.0.0",
     "axios": "^1.11.0",
     "crypto-js": "^4.2.0",
+    "https": "^1.0.0",
     "https-proxy-agent": "^7.0.6",
     "koa": "^3.0.1",
     "koa-router": "^14.0.0"

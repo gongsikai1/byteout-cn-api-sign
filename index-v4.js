@@ -1,5 +1,6 @@
 const axios = require('axios');
 var CryptoJS = require("crypto-js");
+const https = require('https');
 
 const getHTTPSProxy = require('./httpsProxy');
 
@@ -489,7 +490,10 @@ const init = async () => {
             'Req-Signature': '',
             "Req-Device-Fingerprint": Im(),
 
-            "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwNCwic3ViIjoiMTA0IiwiaWF0IjoxNzU0NjE1NzAzLCJleHAiOjE3NTUyMjA1MDN9.ZQqytx_-6umEvjIfbIeBZ57THSb4g3xtriiASG9jTXhsidTOTLuz9-m2mPf-g3DfWtnneZ6n949ifnMhEGuC9w",
+
+            // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwNCwic3ViIjoiMTA0IiwiaWF0IjoxNzU0NjIxMDk2LCJleHAiOjE3NTUyMjU4OTZ9.IUZqb6UNlKRcOJIrqEJybNdfkICPgvPmm6fw5nAMKOA6gnJmlekEk1dveqSkcDDCzkf43oWSUFXiSgAqDJBxyQ",
+
+            // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwNCwic3ViIjoiMTA0IiwiaWF0IjoxNzU0NjE1NzAzLCJleHAiOjE3NTUyMjA1MDN9.ZQqytx_-6umEvjIfbIeBZ57THSb4g3xtriiASG9jTXhsidTOTLuz9-m2mPf-g3DfWtnneZ6n949ifnMhEGuC9w",
             
             // r.e.be.c.c.a97.1.0@gmail.com
             // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMywic3ViIjoiMTAzIiwiaWF0IjoxNzU0NTUwNjA2LCJleHAiOjE3NTUxNTU0MDZ9.3FozKWJv8R-KRysFRR2_aovqVzDj680WEH1DbuJIP2MahIiGloCl3GlNRzQwwwsbD8iJLB-V26BvM1R8OTrVbQ",
@@ -505,9 +509,9 @@ const init = async () => {
             // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
         },
         params: {
-            size: 3000,
-            current: 1,
-            title: '',
+            // size: 3000,
+            // current: 1,
+            // title: '',
         },
         data: {
 
@@ -539,7 +543,7 @@ const init = async () => {
         // t.headers['Referer'] = 'https://byteout.cn/api/auth/captcha'
 
         // 发送GET请求
-        // axios.get('https://www.byteout.cn/api/auth/captcha', {
+        // axi os.get('https://www.byteout.cn/api/auth/captcha', {
         //     headers: {
         //         ...t.headers,
         //         hello: Math.random().toString(36).substring(2, 10)
@@ -553,12 +557,17 @@ const init = async () => {
         // });
 
         // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
-        // const url = 'https://byteout.cn/api/auth/captcha'
-        const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
+        const url = 'https://byteout.cn/api/auth/captcha'
+        // const url = 'https://115.190.9.242/api/auth/captcha'
+        // const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
         if (!proxyInfo) return ;
         // console.log('proxyInfo', proxyInfo)
 
         console.log('t.headers', t.headers)
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false,
+            agent: proxyInfo // 将代理绑定到 HTTPS Agent
+        });
         axios.get(url, {
             headers: {
                 "authority": "byteout.cn",
@@ -572,26 +581,41 @@ const init = async () => {
                 "priority": "u=1, i",
                 // "req-device-fingerprint": "05c6a60e638b533b527d71ccbba40479/0.6/1754363102353/2edd02c20acd8707f555f0ae4726554a/7547c6431a60b87c91dbff17a30321326cec538120937e4bf334f33a0913afee",
                 // "req-signature": "3af932b2c66b578cc1802b7a1ea4ee52/1754363102353/aaa34d58511649bbffd3001efc564f1f4a7c5d7c00288830d85aec9c9478d442",
-                "sec-ch-ua": `\"Google Chrome ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
+                "sec-ch-ua": `\"Google Chrome ${Math.random()} ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
                 "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": `\"Windows ${Math.random()}\"`,
+                "sec-ch-ua-platform": `\"Windows ${Math.random()} ${Math.random()}\"`,
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
-                "Referer": "https://byteout.cn/article/manage",
+                "Referer": "https://byteout.cn/login",
+                // "Referer": "https://115.190.9.242/login",
                 "Referrer-Policy": "strict-origin-when-cross-origin",
                 // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
                 ...t.headers,
                 hello: Math.random().toString(36).substring(2, 10),
                 [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
             },
-            ...(USE_PROXY ? { httpsAgent: proxyInfo } : {}), // 绑定代理
+            ...(USE_PROXY ? { httpsAgent } : {}), // 绑定代理
         })
         .then(response => {
-            console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status, response.data);
+            console.log(`[${new Date().toLocaleTimeString()}] 请求成功:`, response.status, response.data, url);
         })
         .catch(error => {
-            console.log(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message);
+            console.log(`[${new Date().toLocaleTimeString()}] 请求失败:`, error.message, url, JSON.stringify(error));
+            // const time = new Date().toLocaleTimeString();
+            // let errorDetails = `[${time}] 请求失败: ${error.message}，URL: ${url}`;
+            
+            // // 检查是否有服务器响应
+            // if (error.response) {
+            //     // 响应中包含的HTML内容
+            //     errorDetails += `\n服务器返回HTML: ${error.response.data}`;
+            //     // 也可以同时打印状态码
+            //     errorDetails += `\n状态码: ${error.response.status}`;
+            // } else {
+            //     errorDetails += `\n无响应数据: ${JSON.stringify(error)}`;
+            // }
+            
+            // console.log(errorDetails);
         });
 
 
