@@ -16,6 +16,7 @@ const getHTTPSProxy = async () => {
         // res = {"code":200,"msg":"成功","data":{"count":1,"filter_count":1,"surplus_quantity":0,"proxy_list":["110.53.250.157:25538"]}}
         const [ip, port] = (res || {})?.data?.data?.proxy_list[0]?.split(':')
         const proxy_addr = `http://${ip}:${port}`;
+        // const proxy_addr = 'http://42.48.26.100:16298';
         console.log('proxy_addr', proxy_addr)
         proxyAgent = await new HttpsProxyAgent(proxy_addr);
         // const r = await proxyAgent

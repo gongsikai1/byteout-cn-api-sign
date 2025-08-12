@@ -527,7 +527,7 @@ const init = async () => {
     // const randomNumber = 2000 * 30
     // 生成1ms到2000ms的随机数
     // let randomNumber = Math.floor(Math.random() * 2000) + 1;
-    let randomNumber = 1
+    let randomNumber = 2001
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
     const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
@@ -558,6 +558,7 @@ const init = async () => {
 
         // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
         const url = 'https://byteout.cn/api/auth/captcha'
+        // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
         // const url = 'https://115.190.9.242/api/auth/captcha'
         // const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='
         if (!proxyInfo) return ;
@@ -568,33 +569,124 @@ const init = async () => {
             rejectUnauthorized: false,
             agent: proxyInfo // 将代理绑定到 HTTPS Agent
         });
+
+        // fetch("https://byteout.cn/api/auth/captcha", {
+        //     "headers": {
+        //         "accept": "application/json, text/plain, */*",
+        //         "accept-language": "zh-CN,zh;q=0.9",
+        //         "cache-control": "no-cache",
+        //         "pragma": "no-cache",
+        //         "priority": "u=1, i",
+        //         "req-device-fingerprint": "jl2r4dmqpgjdi8qy3b3jq07pu9elb1gt/0.9/1754963303521/38875976e298b16acd29f9927ce68cf3/66db3e4cd3f5f846aff47fe3787846d97ed222a0a5759eacf32046f791613dc2",
+        //         "req-signature": "697ade55b44b1695ec14b8b5ead057d9/1754963303519/75f9c019c122baa0103666ef997acbca4f1eaa8f0af704b0de45404b061e9e0c",
+        //         "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
+        //         "sec-ch-ua-mobile": "?0",
+        //         "sec-ch-ua-platform": "\"Windows\"",
+        //         "sec-fetch-dest": "empty",
+        //         "sec-fetch-mode": "cors",
+        //         "sec-fetch-site": "same-origin"
+        //     },
+        //     "referrer": "https://byteout.cn/article/manage",
+        //     "referrerPolicy": "strict-origin-when-cross-origin",
+        //     "body": null,
+        //     "method": "GET",
+        //     "mode": "cors",
+        //     "credentials": "omit"
+        //     });
+
+        // 创建包含特殊请求头的配置对象
+        const headers = {};
+
+        // 处理带冒号的特殊请求头（HTTP/2伪头字段）
+        // Object.defineProperty(headers, ':authority', {
+        // value: 'byteout.cn',
+        // enumerable: true // 确保属性可枚举，Axios才能正确读取
+        // });
+        // Object.defineProperty(headers, ':method', {
+        // value: 'GET',
+        // enumerable: true
+        // });
+        // Object.defineProperty(headers, ':path', {
+        // value: '/api/auth/captcha',
+        // enumerable: true
+        // });
+        // Object.defineProperty(headers, ':scheme', {
+        // value: 'https',
+        // enumerable: true
+        // });
+
+        // 设置其他常规请求头
+        headers.accept = 'application/json, text/plain, */*';
+        headers['accept-encoding'] = 'gzip, deflate, br, zstd';
+        headers['accept-language'] = 'zh-CN,zh;q=0.9';
+        headers['cache-control'] = 'no-cache';
+        headers.pragma = 'no-cache';
+        headers.priority = 'u=1, i';
+        headers.referer = 'https://byteout.cn/article/manage';
+        // t.headers['Req-Signature'] = gg(t.params, t.data, newTimestamp, newNonce);
+        // t.headers["Req-Device-Fingerprint"] = Im();
+        headers['req-device-fingerprint'] = Im();
+        headers['req-signature'] = gg(t.params, t.data, newTimestamp, newNonce);
+        headers['sec-ch-ua'] = '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"';
+        headers['sec-ch-ua-mobile'] = '?0';
+        headers['sec-ch-ua-platform'] = '"Windows"';
+        headers['sec-fetch-dest'] = 'empty';
+        headers['sec-fetch-mode'] = 'cors';
+        headers['sec-fetch-site'] = 'same-origin';
+        headers['user-agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36';
+        // 'X-Requested-With': undefined
+        // headers['X-Requested-With'] = 'XMLHttpRequest';
+        headers['X-Requested-With'] = undefined;
+
+
         axios.get(url, {
-            headers: {
-                "authority": "byteout.cn",
-                "method": "GET",
-                "path": "/api/article/page",
-                "scheme": "https",
-                "accept": "application/json, text/plain, */*",
-                "accept-language": "zh-CN,zh;q=0.9",
-                "cache-control": "no-cache",
-                "pragma": "no-cache",
-                "priority": "u=1, i",
-                // "req-device-fingerprint": "05c6a60e638b533b527d71ccbba40479/0.6/1754363102353/2edd02c20acd8707f555f0ae4726554a/7547c6431a60b87c91dbff17a30321326cec538120937e4bf334f33a0913afee",
-                // "req-signature": "3af932b2c66b578cc1802b7a1ea4ee52/1754363102353/aaa34d58511649bbffd3001efc564f1f4a7c5d7c00288830d85aec9c9478d442",
-                "sec-ch-ua": `\"Google Chrome ${Math.random()} ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": `\"Windows ${Math.random()} ${Math.random()}\"`,
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-origin",
-                "Referer": "https://byteout.cn/login",
-                // "Referer": "https://115.190.9.242/login",
-                "Referrer-Policy": "strict-origin-when-cross-origin",
-                // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
-                ...t.headers,
-                hello: Math.random().toString(36).substring(2, 10),
-                [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
-            },
+            headers: headers,
+            // 禁用Axios默认添加的全局头，避免冲突
+            // transformRequest: [(data, reqHeaders) => {
+            //     // 移除可能干扰的默认头
+            //     delete reqHeaders.common['User-Agent'];
+            //     delete reqHeaders.common['Accept'];
+            //     return data;
+            // }],
+            // headers: {
+            //     "accept": "application/json, text/plain, */*",
+            //     "accept-language": "zh-CN,zh;q=0.9",
+            //     "cache-control": "no-cache",
+            //     "pragma": "no-cache",
+            //     "priority": "u=1, i",
+            //     "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
+            //     "sec-ch-ua-mobile": "?0",
+            //     "sec-ch-ua-platform": "\"Windows\"",
+            //     "sec-fetch-dest": "empty",
+            //     "sec-fetch-mode": "cors",
+            //     "sec-fetch-site": "same-origin",
+            //     "referrer": "https://byteout.cn/article/manage",
+            //     "referrerPolicy": "strict-origin-when-cross-origin",
+            //     // "authority": "byteout.cn",
+            //     // "method": "GET",
+            //     // "path": "/api/article/page",
+            //     // "scheme": "https",
+            //     // "accept": "application/json, text/plain, */*",
+            //     // "accept-language": "zh-CN,zh;q=0.9",
+            //     // "cache-control": "no-cache",
+            //     // "pragma": "no-cache",
+            //     // "priority": "u=1, i",
+            //     // // "req-device-fingerprint": "05c6a60e638b533b527d71ccbba40479/0.6/1754363102353/2edd02c20acd8707f555f0ae4726554a/7547c6431a60b87c91dbff17a30321326cec538120937e4bf334f33a0913afee",
+            //     // // "req-signature": "3af932b2c66b578cc1802b7a1ea4ee52/1754363102353/aaa34d58511649bbffd3001efc564f1f4a7c5d7c00288830d85aec9c9478d442",
+            //     // "sec-ch-ua": `\"Google Chrome ${Math.random()} ${Math.random()}\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"`,
+            //     // "sec-ch-ua-mobile": "?0",
+            //     // "sec-ch-ua-platform": `\"Windows ${Math.random()} ${Math.random()}\"`,
+            //     // "sec-fetch-dest": "empty",
+            //     // "sec-fetch-mode": "cors",
+            //     // "sec-fetch-site": "same-origin",
+            //     // "Referer": "https://byteout.cn/login",
+            //     // // "Referer": "https://115.190.9.242/login",
+            //     // "Referrer-Policy": "strict-origin-when-cross-origin",
+            //     // // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
+            //     ...t.headers,
+            //     // hello: Math.random().toString(36).substring(2, 10),
+            //     // [Math.random().toString(36).substring(2, 10)]: Math.random().toString(36).substring(2, 10)
+            // },
             ...(USE_PROXY ? { httpsAgent } : {}), // 绑定代理
         })
         .then(response => {
