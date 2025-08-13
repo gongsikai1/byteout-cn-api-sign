@@ -527,7 +527,7 @@ const init = async () => {
     // const randomNumber = 2000 * 30
     // 生成1ms到2000ms的随机数
     // let randomNumber = Math.floor(Math.random() * 2000) + 1;
-    let randomNumber = 2001
+    let randomNumber = 1
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
     const timeId = setInterval(async () => {
         // 每次请求生成新的时间戳和随机数
@@ -557,7 +557,8 @@ const init = async () => {
         // });
 
         // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420${Math.random().toString(36).substring(2, 10)}@qq.com/PASSWORD-RESET`
-        const url = 'https://byteout.cn/api/auth/captcha'
+        // const url = 'https://byteout.cn/api/auth/captcha'
+        const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg?b=${Math.random()}`
         // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
         // const url = 'https://115.190.9.242/api/auth/captcha'
         // const url = 'https://byteout.cn/api/article/page?size=3000&current=1&title='

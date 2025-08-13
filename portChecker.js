@@ -1,7 +1,7 @@
 const net = require('net');
 
 // 配置参数
-const targetHost = 'byteout.cn';
+const targetHost = '115.190.9.242';
 const targetPort = 443;
 const checkInterval = 1; // 检测间隔（毫秒），建议不要小于100
 
@@ -11,7 +11,7 @@ function checkPort() {
     const client = net.createConnection({
         host: targetHost,
         port: targetPort,
-        timeout: 5000 // 5秒超时
+        timeout: 50000000 // 5秒超时
     });
 
     client.on('connect', () => {
