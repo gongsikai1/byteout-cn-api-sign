@@ -52,7 +52,7 @@ const init = async () => {
         console.log('proxyInfo', proxyInfo)
 
         try {
-            await browser.close();
+            // await browser.close();
             browser = await puppeteer.launch({
                 headless: "new",
                 args: [
@@ -76,7 +76,7 @@ const init = async () => {
         }
     }, 1000 * 60);
 
-    const aaa = Math.random().toString(36).substring(2, 10);
+    let aaa = Math.random().toString(36).substring(2, 10);
 
     // 启动无头浏览器
     // const browser = await puppeteer.launch({
@@ -102,7 +102,11 @@ const init = async () => {
     //     };
     // });
 
-    const url = `https://byteout.cn/api/auth/captcha?aaa=${aaa}`;
+    // const url = `https://byteout.cn/api/auth/captcha`;
+    // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
+    
+    const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
+    //     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
 
     // const url = 'http://gongsikai.com'
 
@@ -547,7 +551,7 @@ const init = async () => {
 
     // deviceFingerPrint = {"visitorId":"05c6a60e638b533b527d71ccbba40479","confidence":0.6,"timestamp":1754270961272,"nonce":"e767a7a556d8a34c9f01dec792f05ab9","signature":"340295029406afe14bfd668ca3a812b116a931be73da69684883fc9b571c5eac"}
 
-    Im = () => {
+    const Im = () => {
         Om()
         // const e = localStorage.getItem('device_fingerprint');
         const e = deviceFingerPrint;
@@ -679,7 +683,12 @@ const init = async () => {
         // console.log(`请求状态: ${response.status()} ${url}`);
         try {
             
-            if (!currentPage) return console.error('无法创建新页面');
+             await page.goto(url, {
+                waitUntil: 'networkidle2',
+                timeout: 30000
+            });
+
+            if (currentPage.isClosed()) return console.error('无法创建新页面');
             await currentPage.setExtraHTTPHeaders(headers);
             console.log(111)
             // const response = await currentPage.goto(url, {
@@ -689,20 +698,41 @@ const init = async () => {
             //     // referrerPolicy: 'strict-origin-when-cross-origin',
             //     // ignoreHTTPSErrors: true  // 添加SSL错误忽略
             // });
-            const responseBody = await currentPage.evaluate(async (url, headers) => {
+            const rnnFunction = async (url, headers) => {
                 try {
                     const res = await fetch(url, {
                         method: 'GET',
-                        headers: headers,
+                        headers,
                         // credentials: 'omit'
                     });
                     console.log('res', res)
-                    return await res.text();
+                    const text = await res.text()
+                    return { text, status: res.status };
                 } catch (e) {
-                    return `{ "error": "${e.message}" }`;
+                    return `{ "error": "${e.message} ${JSON.stringify(e)}" }`;
                 }
-            }, url, headers);
-            console.log(222)
+            }
+            const randomNumber = 101;
+            setInterval(async () => {
+                if (currentPage.isClosed()) return console.error('无法创建新页面');
+                // if (!currentPage) return console.error('无法创建新页面');
+                await currentPage.setExtraHTTPHeaders(headers);
+                aaa = Math.random().toString(36).substring(2, 10);
+                t.params.aaa = aaa;
+                console.log('params', t.params)
+                const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
+                    ...headers,
+                    'req-device-fingerprint': Im(),
+                    'req-signature': gg(t.params, t.data, newTimestamp, newNonce)
+                });
+                console.log('响应体内容:', responseBody);
+                // console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
+                // if (!currentPage.isClosed()) {
+                //     await currentPage.close().catch(() => {});
+                // }
+            }, randomNumber);
+            // const responseBody = await currentPage.evaluate(rnnFunction, url, headers);
+            // console.log(222)
             // console.log(`请求成功: ${response.status()} ${url}`);
             // 添加响应状态验证
             // 验证响应内容类型
@@ -712,11 +742,11 @@ const init = async () => {
             // }
 
             // const responseBody = await response.text();
-            console.log('响应体内容:', responseBody);
-            // console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
-            if (!currentPage.isClosed()) {
-                await currentPage.close().catch(() => {});
-            }
+            // console.log('响应体内容:', responseBody);
+            // // console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
+            // if (!currentPage.isClosed()) {
+            //     await currentPage.close().catch(() => {});
+            // }
         } catch (error) {
             console.error(`请求失败: ${error.message}`, {
                 url,
@@ -728,9 +758,9 @@ const init = async () => {
             // 失败后刷新页面
             // await page.reload();
             if (!currentPage) return console.error('无法创建新页面');
-            if (!currentPage.isClosed()) {
-                await currentPage.close().catch(() => {});
-            }
+            // if (!currentPage.isClosed()) {
+            //     await currentPage.close().catch(() => {});
+            // }
             // await currentPage.close();
             // await browser.newPage();
         } finally {
@@ -746,11 +776,11 @@ const init = async () => {
     const randomNumber = 1
 
 
-    // await sendRequest();
+    await sendRequest();
     // 修改定时器逻辑
-    const interval = setInterval(async () => {
-        await sendRequest();
-    }, randomNumber);
+    // const interval = setInterval(async () => {
+    //     await sendRequest();
+    // }, randomNumber);
 
     // 关闭浏览器钩子
     // process.on('SIGINT', async () => {
