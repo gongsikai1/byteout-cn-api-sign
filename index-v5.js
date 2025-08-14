@@ -102,11 +102,12 @@ const init = async () => {
     //     };
     // });
 
-    // const url = `https://byteout.cn/api/auth/captcha`;
+    const url = `https://byteout.cn/api/auth/captcha`;
+    // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     
-    const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
-    //     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
+    // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
+    // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
 
     // const url = 'http://gongsikai.com'
 
