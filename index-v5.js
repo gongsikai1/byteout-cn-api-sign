@@ -21,10 +21,62 @@ const init = async () => {
 
     console.log('proxyInfo', proxyInfo)
 
+    let browser = null;
+    let currentPage = null;
+
+    try {
+        browser = await puppeteer.launch({
+            headless: "new",
+            args: [
+                '--disable-blink-features=AutomationControlled',
+                ...(proxyInfo ? [`--proxy-server=http://${proxyInfo.host}:${proxyInfo.port}`] : []),
+                '--disable-web-security', // 禁用同源策略（关键修复）
+                '--disable-features=IsolateOrigins,site-per-process', // 禁用站点隔离
+                '--disable-features=SameSiteByDefaultCookies',
+                '--no-sandbox',  // 添加沙箱禁用参数（解决部分环境问题）
+                '--disable-setuid-sandbox'
+            ],
+            ignoreHTTPSErrors: true,
+            timeout: 20000
+        });
+        console.log('浏览器启动成功');
+        currentPage = await browser.newPage();
+        console.log('页面启动成功');
+    } catch (error) {
+        console.error('浏览器启动失败:', error);
+        process.exit(1);  // 启动失败时退出程序
+    }
+
     setInterval(async () => {
-    proxyInfo = await getHTTPSProxy();
-    console.log('proxyInfo', proxyInfo)
-    }, 1000 * 60)
+        proxyInfo = await getHTTPSProxy();
+        console.log('proxyInfo', proxyInfo)
+
+        try {
+            await browser.close();
+            browser = await puppeteer.launch({
+                headless: "new",
+                args: [
+                    '--disable-blink-features=AutomationControlled',
+                    ...(proxyInfo ? [`--proxy-server=http://${proxyInfo.host}:${proxyInfo.port}`] : []),
+                    '--disable-web-security', // 禁用同源策略（关键修复）
+                    '--disable-features=IsolateOrigins,site-per-process', // 禁用站点隔离
+                    '--disable-features=SameSiteByDefaultCookies',
+                    '--no-sandbox',  // 添加沙箱禁用参数（解决部分环境问题）
+                    '--disable-setuid-sandbox'
+                ],
+                ignoreHTTPSErrors: true,
+                timeout: 20000
+            });
+            console.log('浏览器启动成功');
+            currentPage = await browser.newPage();
+            console.log('页面启动成功');
+        } catch (error) {
+            console.error('浏览器启动失败:', error);
+            process.exit(1);  // 启动失败时退出程序
+        }
+    }, 1000 * 60);
+
+    const aaa = Math.random().toString(36).substring(2, 10);
 
     // 启动无头浏览器
     // const browser = await puppeteer.launch({
@@ -35,24 +87,8 @@ const init = async () => {
     //         //  `--proxy-server=${proxyInfo.host}:${proxyInfo.port}`
     //     ]
     // });
-    let browser = null;
         // 添加浏览器启动错误捕获
-    try {
-        browser = await puppeteer.launch({
-            headless: "new",
-            args: [
-                '--disable-blink-features=AutomationControlled',
-                ...(proxyInfo ? [`--proxy-server=http://${proxyInfo.host}:${proxyInfo.port}`] : []),
-                '--no-sandbox',  // 添加沙箱禁用参数（解决部分环境问题）
-                '--disable-setuid-sandbox'
-            ],
-            timeout: 20000
-        });
-        console.log('浏览器启动成功');
-    } catch (error) {
-        console.error('浏览器启动失败:', error);
-        process.exit(1);  // 启动失败时退出程序
-    }
+    
 
     const page = await browser.newPage();
 
@@ -66,7 +102,7 @@ const init = async () => {
     //     };
     // });
 
-    const url = `https://byteout.cn/api/auth/captcha`;
+    const url = `https://byteout.cn/api/auth/captcha?aaa=${aaa}`;
 
     // const url = 'http://gongsikai.com'
 
@@ -554,6 +590,7 @@ const init = async () => {
             // "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjEwMCwic3ViIjoiMTAwIiwiaWF0IjoxNzU0NTMxNjg3LCJleHAiOjE3NTUxMzY0ODd9.-QVuOCS9-Ts2jJwiZAHtR8NYJCEs9j_sXX5Nj3mOwXrdvU-cIpxI-lzFRhgu5pOVVhbPbeKX2e6XBjdhnaBppg",
         },
         params: {
+            aaa,
             // size: 3000,
             // current: 1,
             // title: '',
@@ -575,11 +612,12 @@ const init = async () => {
     // let randomNumber = 1
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;
 
+    
+    
     const sendRequest = async () => {
 
         // 创建全新页面实例而非复用全局page
         // console.log('000')
-        const currentPage = await browser.newPage();
         console.log('000 111')
 
         // 每次请求生成新的时间戳和随机数
@@ -640,27 +678,45 @@ const init = async () => {
 
         // console.log(`请求状态: ${response.status()} ${url}`);
         try {
+            
+            if (!currentPage) return console.error('无法创建新页面');
             await currentPage.setExtraHTTPHeaders(headers);
             console.log(111)
-            const response = await currentPage.goto(url, {
-                waitUntil: 'domcontentloaded', // 修改等待策略
-                timeout: 20000, // 延长超时时间
-                // referer: headers.referer,
-                // referrerPolicy: 'strict-origin-when-cross-origin',
-                // ignoreHTTPSErrors: true  // 添加SSL错误忽略
-            });
+            // const response = await currentPage.goto(url, {
+            //     waitUntil: 'domcontentloaded', // 修改等待策略
+            //     timeout: 20000, // 延长超时时间
+            //     // referer: headers.referer,
+            //     // referrerPolicy: 'strict-origin-when-cross-origin',
+            //     // ignoreHTTPSErrors: true  // 添加SSL错误忽略
+            // });
+            const responseBody = await currentPage.evaluate(async (url, headers) => {
+                try {
+                    const res = await fetch(url, {
+                        method: 'GET',
+                        headers: headers,
+                        // credentials: 'omit'
+                    });
+                    console.log('res', res)
+                    return await res.text();
+                } catch (e) {
+                    return `{ "error": "${e.message}" }`;
+                }
+            }, url, headers);
             console.log(222)
             // console.log(`请求成功: ${response.status()} ${url}`);
             // 添加响应状态验证
             // 验证响应内容类型
-            const contentType = response.headers()['content-type'];
+            // const contentType = response.headers()['content-type'];
             // if (!contentType || !contentType.includes('application/json')) {
             //     throw new Error('Invalid content-type: ' + contentType);
             // }
 
-            const responseBody = await response.text();
+            // const responseBody = await response.text();
             console.log('响应体内容:', responseBody);
-            console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
+            // console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
+            if (!currentPage.isClosed()) {
+                await currentPage.close().catch(() => {});
+            }
         } catch (error) {
             console.error(`请求失败: ${error.message}`, {
                 url,
@@ -671,32 +727,37 @@ const init = async () => {
             });
             // 失败后刷新页面
             // await page.reload();
+            if (!currentPage) return console.error('无法创建新页面');
+            if (!currentPage.isClosed()) {
+                await currentPage.close().catch(() => {});
+            }
             // await currentPage.close();
             // await browser.newPage();
         } finally {
             // 确保当前页面关闭
-            if (!currentPage.isClosed()) {
-                await currentPage.close().catch(() => {});
-            }
+            // if (!currentPage.isClosed()) {
+            //     await currentPage.close().catch(() => {});
+            // }
         }
     };
 
     // const randomNumber = 1;
-    const randomNumber = () => 2000 + Math.floor(Math.random() * 3000); // 2-5 s 随机
+    // const randomNumber = () => 2000 + Math.floor(Math.random() * 3000); // 2-5 s 随机
+    const randomNumber = 1
 
 
-    await sendRequest();
+    // await sendRequest();
     // 修改定时器逻辑
-    // const interval = setInterval(async () => {
-    //     await sendRequest();
-    // }, randomNumber);
+    const interval = setInterval(async () => {
+        await sendRequest();
+    }, randomNumber);
 
     // 关闭浏览器钩子
-    process.on('SIGINT', async () => {
-        clearInterval(interval);
-        await browser.close();
-        process.exit();
-    });
+    // process.on('SIGINT', async () => {
+    //     clearInterval(interval);
+    //     await browser.close();
+    //     process.exit();
+    // });
 
     // const timeId = setInterval(async () => {
     //     // 每次请求生成新的时间戳和随机数
