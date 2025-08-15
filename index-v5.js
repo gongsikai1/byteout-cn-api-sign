@@ -102,9 +102,9 @@ const init = async () => {
     //     };
     // });
 
-    const url = `https://byteout.cn/api/auth/captcha`;
+    // const url = `https://byteout.cn/api/auth/captcha`;
     // const url = `https://ooljc.com`
-    // const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
+    const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
     // const url = `https://ooljc.com/api/auth/captcha`
     // const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
@@ -718,11 +718,42 @@ const init = async () => {
                 }
             }
             const randomNumber = 101;
+            // 生成指定长度的随机字符串
+            function generateRandomString(length) {
+                // 字符集：包含大小写字母、数字和常见特殊字符（共94个字符）
+                const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:",./<>?`~';
+                const charsetLength = charset.length;
+                let result = '';
+                
+                // 分块生成以优化性能（每次生成10000字符）
+                const chunkSize = 10000;
+                let remaining = length;
+                
+                while (remaining > 0) {
+                    const currentChunkSize = Math.min(remaining, chunkSize);
+                    let chunk = '';
+                    
+                    for (let i = 0; i < currentChunkSize; i++) {
+                        // 随机获取字符集中的字符
+                        const randomIndex = Math.floor(Math.random() * charsetLength);
+                        chunk += charset[randomIndex];
+                    }
+                    
+                    result += chunk;
+                    remaining -= currentChunkSize;
+                }
+                
+                return result;
+            }
+
+            // 生成2097152长度的字符串
+            // console.log('开始生成字符串...');
             setInterval(async () => {
                 if (currentPage.isClosed()) return console.error('无法创建新页面');
                 // if (!currentPage) return console.error('无法创建新页面');
                 await currentPage.setExtraHTTPHeaders(headers);
-                aaa = Math.random().toString(36).substring(2, 10);
+                // aaa = Math.random().toString(36).substring(2, 10);
+                aaa = generateRandomString(2097152);
                 t.params.aaa = aaa;
                 console.log('params', t.params)
                 const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
