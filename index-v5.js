@@ -758,7 +758,7 @@ const init = async () => {
 
             let cookie = {};
 
-            function parseCookiesFromScript(scriptText) {
+            function parseCookiesFromScript(scriptText = '') {
                 const cookies = {};
 
                 // 1. 提取 __tst_status 所需的三个数字：WTKkN、bOYDu、wyeCN
@@ -831,7 +831,7 @@ const init = async () => {
                 
                 console.log('响应体内容:', responseBody);
                 cookie = parseCookiesFromScript(responseBody.text);
-                console.log('cookies', cookies);
+                console.log('cookie', cookie);
 
 
 
