@@ -34,7 +34,14 @@ const init = async () => {
                 '--disable-features=IsolateOrigins,site-per-process', // 禁用站点隔离
                 '--disable-features=SameSiteByDefaultCookies',
                 '--no-sandbox',  // 添加沙箱禁用参数（解决部分环境问题）
-                '--disable-setuid-sandbox'
+                '--disable-setuid-sandbox',
+                '--disable-features=CrossSiteDocumentBlockingIfIsolating',
+                '--disable-site-isolation-trials',
+                '--enable-experimental-cookie-features',
+                '--disable-web-security',
+                '--allow-running-insecure-content',
+                '--disable-blink-features=AutomationControlled', // 禁用自动化特征检测
+                '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36' // 模拟真实浏览器UA
             ],
             ignoreHTTPSErrors: true,
             timeout: 20000
@@ -104,9 +111,9 @@ const init = async () => {
 
     // const url = `https://byteout.cn/api/auth/captcha`;
     // const url = `https://ooljc.com`
-    const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
+    // const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
     // const url = `https://ooljc.com/api/auth/captcha`
-    // const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
+    const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     
@@ -748,21 +755,172 @@ const init = async () => {
 
             // 生成2097152长度的字符串
             // console.log('开始生成字符串...');
+
+            let cookie = {};
+
+            function parseCookiesFromScript(scriptText) {
+                const cookies = {};
+
+                // 1. 提取 __tst_status 所需的三个数字：WTKkN、bOYDu、wyeCN
+                // 匹配脚本中 e 对象的结构：{ WTKkN:数字, bOYDu:数字, dtzqS:..., wyeCN:数字, ... }
+                const eObjectRegex = /var e=\{([\s\S]*?)\};/i;
+                const eObjectMatch = scriptText.match(eObjectRegex);
+                if (!eObjectMatch) {
+                    throw new Error("未找到 e 对象定义");
+                }
+                const eObjectContent = eObjectMatch[1];
+
+                // 从 e 对象中提取 WTKkN、bOYDu、wyeCN 的值
+                const wtkknRegex = /WTKkN:(\d+)/i;
+                const boyduRegex = /bOYDu:(\d+)/i;
+                const wyecnRegex = /wyeCN:(\d+)/i;
+
+                const WTKkN = Number(eObjectContent.match(wtkknRegex)?.[1]);
+                const bOYDu = Number(eObjectContent.match(boyduRegex)?.[1]);
+                const wyeCN = Number(eObjectContent.match(wyecnRegex)?.[1]);
+
+                if (!WTKkN || !bOYDu || !wyeCN) {
+                    // throw new Error("提取 WTKkN、bOYDu、wyeCN 失败");
+                    console.log('提取 WTKkN、bOYDu、wyeCN 失败')
+                }
+
+                // 计算 __tst_status 的值（脚本逻辑：t = WTKkN + bOYDu + wyeCN）
+                const tstStatusValue = WTKkN + bOYDu + wyeCN;
+                cookies['__tst_status'] = `${tstStatusValue}#`;
+
+
+                // 2. 提取 EO_Bot_Ssid 对应的数字
+                // 匹配脚本中 case "3" 的逻辑：case"3":t=a[...](t, 数字);
+                // const ssidNumberRegex = /case"3":t=a\[_0x649a<span data-type="inline-math" data-value="IjB4NyI="></span>\]\(t,(\d+)\);/i;
+                // 匹配 case "3":t=a[_0x649a("0x7")](t, 数字); 格式
+                const ssidNumberRegex = /case"3":t=a\[_0x649a\("0x7"\)\]\(t,(\d+)\);/i;
+                // 修正后的正则表达式（移除HTML标签）
+                // const ssidNumberRegex = /case"3":t=a\[_0x649a\[0x7\]\]\(t,(\d+)\);/i;
+                const ssidNumberMatch = scriptText.match(ssidNumberRegex);
+                if (!ssidNumberMatch) {
+                    console.log("未找到 EO_Bot_Ssid 对应的数字");
+                }
+                const ssidNumber = ssidNumberMatch ? ssidNumberMatch[1] : null;
+
+                // 拼接 EO_Bot_Ssid 的值（脚本逻辑："EO_Bot_Ssid=" + 数字）
+                cookies['EO_Bot_Ssid'] = ssidNumber;
+
+
+                return cookies;
+            }
+
             setInterval(async () => {
                 if (currentPage.isClosed()) return console.error('无法创建新页面');
                 // if (!currentPage) return console.error('无法创建新页面');
                 await currentPage.setExtraHTTPHeaders(headers);
-                // aaa = Math.random().toString(36).substring(2, 10);
-                aaa = generateRandomString(2097152);
+                aaa = Math.random().toString(36).substring(2, 10);
+                aaa = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`
+                // aaa = generateRandomString(2097152);
                 t.params.aaa = aaa;
                 console.log('params', t.params)
+
+                // const cookies = await currentPage.cookies();
                 const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
                     ...headers,
                     'req-device-fingerprint': Im(),
                     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
-                    'referer': `https://byteout.cn/article/manage?aaa=${aaa}`,
+                    'referer': `https://ooljc.com/article/manage?aaa=${aaa}`,
+                    // 'cookie': cookie.map(c => `${c.name}=${c.value}`).join('; '),
+                    'cookie': Object.entries(cookie).map(([name, value]) => `${name}=${value}`).join('; ')
                 });
+                
                 console.log('响应体内容:', responseBody);
+                cookie = parseCookiesFromScript(responseBody.text);
+                console.log('cookies', cookies);
+
+
+
+
+
+                // try {
+
+                //     const textContent = responseBody.text || '';
+                //     if (textContent.trim().startsWith('<script>')) {
+                //         console.log('检测到 script 标签，开始提取并执行脚本内容...');
+                //         const scriptMatch = textContent.match(/<script>([\s\S]*?)<\/script>/i);
+                        
+                //         if (scriptMatch && scriptMatch[1]) {
+                //             const scriptCode = scriptMatch[1];
+                //             console.log('scriptCode', scriptCode);
+                            
+                //             // 使用 Puppeteer 的 API 设置 cookie 替代直接 eval
+                //             if (scriptCode.includes('document.cookie')) {
+                //                 const cookieParams = scriptCode.match(/document\.cookie\s*=\s*'([^']+)'/);
+                //                 console.log('cookieParams', cookieParams)
+                //                 if (cookieParams && cookieParams[1]) {
+                //                     const [name, value] = cookieParams[1].split('=');
+                //                     cookie = []
+                //                     cookie.push({ name: name.trim(), value: value.split(';')[0].trim(), domain: 'ooljc.com' });
+                //                     // await currentPage.setCookie({
+                //                     //     name: name.trim(),
+                //                     //     value: value.split(';')[0].trim(),
+                //                     //     domain: 'ooljc.com'
+                //                     // });
+                //                     console.log('通过 Puppeteer API 设置 cookie 成功');
+                //                 }
+                //             } else {
+                //                 // await currentPage.evaluate((code) => {
+                //                 //     eval(code);
+                //                 // }, scriptCode);
+                //             }
+                            
+                //             // 验证 cookie 设置
+                //             // const updatedCookies = await currentPage.cookies();
+                //             console.log('当前页面 cookies:');
+                //             // console.log(updatedCookies.filter(c => c.name === '__tst_status' || c.name === 'EO_Bot_Ssid'));
+                //         }
+                //     }
+                // } catch (error) {
+                //     console.error('脚本执行失败:', error);
+                // }
+
+
+
+
+
+                // const cookies = await currentPage.cookies();
+                // const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
+                //     ...headers,
+                //     'req-device-fingerprint': Im(),
+                //     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
+                //     'referer': `https://byteout.cn/article/manage?aaa=${aaa}`,
+                //     'cookie': cookies.map(c => `${c.name}=${c.value}`).join('; ')
+                // });
+                // // 检查 text 是否以 <script> 开头
+                // const textContent = responseBody.text || '';
+                // if (textContent.trim().startsWith('<script>')) {
+                // console.log('检测到 script 标签，开始提取并执行脚本内容...');
+                
+                // // 提取 <script> 和 </script> 之间的内容
+                // const scriptMatch = textContent.match(/<script>([\s\S]*?)<\/script>/i);
+                // if (scriptMatch && scriptMatch[1]) {
+                //     const scriptCode = scriptMatch[1];
+                //     console.log('scriptCode', scriptCode)
+                    
+                //     // 在页面上下文中执行脚本
+                //     await currentPage.evaluate((code) => {
+                //     // 使用 eval 执行脚本（注意：执行未知脚本有安全风险）
+                //     eval(code);
+                //     }, scriptCode);
+                    
+                //     console.log('脚本执行完成');
+                    
+                //     // 可选：验证脚本执行结果（例如检查 cookie 是否被设置）
+                //     const cookies = await currentPage.cookies();
+                //     console.log('当前页面 cookies:');
+                //     console.log(cookies.filter(c => c.name === '__tst_status' || c.name === 'EO_Bot_Ssid'));
+                // } else {
+                //     console.log('未提取到有效的脚本内容');
+                // }
+                // } else {
+                // console.log('text 内容不以 <script> 开头，不执行任何操作');
+                // }
+                // console.log('响应体内容:', responseBody);
                 // console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
                 // if (!currentPage.isClosed()) {
                 //     await currentPage.close().catch(() => {});
