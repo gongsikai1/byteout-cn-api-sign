@@ -764,9 +764,11 @@ const init = async () => {
                 // 1. 提取 __tst_status 所需的三个数字：WTKkN、bOYDu、wyeCN
                 // 匹配脚本中 e 对象的结构：{ WTKkN:数字, bOYDu:数字, dtzqS:..., wyeCN:数字, ... }
                 const eObjectRegex = /var e=\{([\s\S]*?)\};/i;
-                const eObjectMatch = scriptText.match(eObjectRegex);
+                let eObjectMatch = scriptText.match(eObjectRegex);
+                if (!eObjectMatch) eObjectMatch = ['', '']
                 if (!eObjectMatch) {
-                    throw new Error("未找到 e 对象定义");
+                    // throw new Error("未找到 e 对象定义");
+                    console.log('未找到 e 对象定义');
                 }
                 const eObjectContent = eObjectMatch[1];
 
