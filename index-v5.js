@@ -105,6 +105,8 @@ const init = async () => {
     const url = `https://byteout.cn/api/auth/captcha`;
     // const url = `https://ooljc.com`
     // const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
+    // const url = `https://ooljc.com/api/auth/captcha`
+    // const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     
@@ -658,7 +660,7 @@ const init = async () => {
         headers['cache-control'] = 'no-cache';
         headers.pragma = 'no-cache';
         headers.priority = 'u=1, i';
-        headers.referer = 'https://byteout.cn/article/manage';
+        // headers.referer = `https://byteout.cn/article/manage?aaa=${aaa}`;
         // t.headers['Req-Signature'] = gg(t.params, t.data, newTimestamp, newNonce);
         // t.headers["Req-Device-Fingerprint"] = Im();
         headers['req-device-fingerprint'] = Im();
@@ -726,7 +728,8 @@ const init = async () => {
                 const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
                     ...headers,
                     'req-device-fingerprint': Im(),
-                    'req-signature': gg(t.params, t.data, newTimestamp, newNonce)
+                    'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
+                    'referer': `https://byteout.cn/article/manage?aaa=${aaa}`,
                 });
                 console.log('响应体内容:', responseBody);
                 // console.log(`请求成功: ${response.status()} ${url} ${JSON.stringify(response)}`);
