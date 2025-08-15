@@ -103,6 +103,7 @@ const init = async () => {
     // });
 
     const url = `https://byteout.cn/api/auth/captcha`;
+    // const url = `https://ooljc.com`
     // const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
