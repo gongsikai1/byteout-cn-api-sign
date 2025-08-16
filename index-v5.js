@@ -4,6 +4,9 @@ var CryptoJS = require("crypto-js");
 const https = require('https');
 
 const getHTTPSProxy = require('./httpsProxy');
+const ooljcHeaders = require('./getSignOoljc');
+
+console.log('ooljcHeaders', ooljcHeaders)
 
 const init = async () => {
 
@@ -112,13 +115,13 @@ const init = async () => {
     // const url = `https://byteout.cn/api/auth/captcha`;
     // const url = `https://ooljc.com`
     // const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
-    // const url = `https://ooljc.com/api/auth/captcha`
+    const url = `https://ooljc.com/api/auth/captcha`
     // const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     // const url = `https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     
-    const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
+    // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
 
     // const url = 'http://gongsikai.com'
@@ -833,10 +836,12 @@ const init = async () => {
                     ...headers,
                     'req-device-fingerprint': Im(),
                     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
-                    'referer': `https://byteout.cn/article/manage?aaa=${aaa}`,
+                    'X-Fingerprint': ooljcHeaders.X_Fingerprint(),
+                    'X-Date': ooljcHeaders.X_Date(),
+                    'referer': `https://ooljc.com/article/manage?aaa=${aaa}`,
                     // 'cookie': cookie.map(c => `${c.name}=${c.value}`).join('; '),
                     'cookie': Object.entries(cookie).map(([name, value]) => `${name}=${value}`).join('; '),
-                    'host': 'byteout.cn',
+                    'host': 'ooljc.com',
                 });
                 
                 console.log('响应体内容:', responseBody);
