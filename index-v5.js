@@ -116,9 +116,9 @@ const init = async () => {
     // const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
-    const url = `https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
+    // const url = `https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     
-    // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
+    const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
 
     // const url = 'http://gongsikai.com'
@@ -729,7 +729,8 @@ const init = async () => {
             // 生成指定长度的随机字符串
             function generateRandomString(length) {
                 // 字符集：包含大小写字母、数字和常见特殊字符（共94个字符）
-                const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:",./<>?`~';
+                // const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:",./<>?`~';
+                const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                 const charsetLength = charset.length;
                 let result = '';
                 
@@ -812,24 +813,30 @@ const init = async () => {
                 return cookies;
             }
 
+            // aaa = generateRandomString(2097152);
+            // aaa = generateRandomString(209715);
+
             setInterval(async () => {
                 if (currentPage.isClosed()) return console.error('无法创建新页面');
                 // if (!currentPage) return console.error('无法创建新页面');
                 await currentPage.setExtraHTTPHeaders(headers);
-                aaa = Math.random().toString(36).substring(2, 10);
+                // aaa = Math.random().toString(36).substring(2, 10);
                 aaa = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`
                 // aaa = generateRandomString(2097152);
+                // aaa = generateRandomString(1097152);
                 t.params.aaa = aaa;
-                console.log('params', t.params)
+                // t.params.bbb = aaa;
+                // console.log('params', t.params)
 
                 // const cookies = await currentPage.cookies();
                 const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
                     ...headers,
                     'req-device-fingerprint': Im(),
                     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
-                    'referer': `https://ooljc.com/article/manage?aaa=${aaa}`,
+                    'referer': `https://byteout.cn/article/manage?aaa=${aaa}`,
                     // 'cookie': cookie.map(c => `${c.name}=${c.value}`).join('; '),
-                    'cookie': Object.entries(cookie).map(([name, value]) => `${name}=${value}`).join('; ')
+                    'cookie': Object.entries(cookie).map(([name, value]) => `${name}=${value}`).join('; '),
+                    'host': 'byteout.cn',
                 });
                 
                 console.log('响应体内容:', responseBody);
