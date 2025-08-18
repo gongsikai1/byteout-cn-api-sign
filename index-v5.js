@@ -160,7 +160,7 @@ const init = async () => {
 
         // 默认头像
         'https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg', // 10.5kb
-        'https://byteout.cn/static/svg/BOY_AVATAR_B-CR5P22fm.svg', // 9.6kb
+        'https://byteout.cn/static/svg/BOY_AVATAR_B-CR5P22fm.svg', // 9.6kb √
         'https://byteout.cn/static/svg/BOY_AVATAR_C-hTCJ7dni.svg',
         'https://byteout.cn/static/svg/BOY_AVATAR_D-CfMmPNqg.svg',
         'https://byteout.cn/static/svg/BOY_AVATAR_E-CzEj68GC.svg',
@@ -889,6 +889,8 @@ const init = async () => {
                 index = urls[index] ? index + 1 : 0;
 
                 url = urls[index];
+
+                console.log('url', url, index)
                 
                 t.params.aaa = aaa;
                 // t.params.bbb = aaa;
