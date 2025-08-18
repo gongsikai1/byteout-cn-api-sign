@@ -115,13 +115,69 @@ const init = async () => {
     // const url = `https://byteout.cn/api/auth/captcha`;
     // const url = `https://ooljc.com`
     // const url = `https://ooljc.com/static/webp/background-BXWqynIs.webp`;
-    const url = `https://api.ooljc.com/auth/captcha`
+    // const url = `https://api.ooljc.com/auth/captcha`
     // const url = `https://ooljc.com/static/js/chart-zUzb6ZNT.js`
     // const url = `https://byteout.cn/static/js/ant-Bi91NQJO.js`
     // const url = `https://www.byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     // const url = `https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     
     // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
+    let url = `https://byteout.cn/static/js/ant-Ceh_QTZw.js`
+    const urls = [
+        // byteout.cn
+
+        // 首页
+        'https://byteout.cn/static/js/ant-Cg2vTT4h.js', // 289kb
+        'https://byteout.cn/static/js/index-C_nPqyez.js', // 112kb
+        'https://byteout.cn/static/js/vue-CLDMx5d0.js', // 46.3kb
+        'https://byteout.cn/static/svg/crab-CZDtUhlO.svg', // 17.2kb
+        'https://byteout.cn/static/png/qq-B_NyzcFm.png', // 14.3kb
+        'https://byteout.cn/static/js/github-Bdker_M6.js', // 6.3kb
+        'https://byteout.cn/static/jpg/logo-CNdHO_r-.jpg', // 4.7kb
+        'https://byteout.cn/static/css/index-BMk0UeDv.css', // 4.2kb
+        'https://byteout.cn/api/auth/captcha', // 3.9kb
+        'https://byteout.cn/static/svg/tree-BWLOCtEZ.svg', // 2.2kb
+        'https://byteout.cn/static/js/LoginForm.vue_vue_type_script_setup_true_lang-BmZHkU0H.js', // 1.9kb
+        'https://byteout.cn/static/js/RegisterForm.vue_vue_type_script_setup_true_lang-BEDu5ha9.js', // 1.9kb
+        'https://byteout.cn/static/js/index-Bdmg5-ow.js', // 1.9kb
+        'https://byteout.cn/static/js/Scene-DhytyuMD.js', // 1.8kb
+        'https://byteout.cn/static/js/ThemeLocaleSwitcher.vue_vue_type_script_setup_true_lang-Ck0Vza8H.js', // 1.6kb
+        'https://byteout.cn/login', // 1.1kb
+        'https://byteout.cn/static/js/lodash-DeRAoAPk.js', // 711b
+        'https://byteout.cn/favicon.ico', // 701b
+        'https://byteout.cn/static/css/Scene-D_X9kHpu.css', // 598b
+        'https://byteout.cn/static/css/ThemeLocaleSwitcher-Cevgv5w1.css', // 582b
+        'https://byteout.cn/static/js/Logo.vue_vue_type_script_setup_true_lang-DO_hf21a.js', // 490b
+        'https://byteout.cn/static/css/index-BRG3-YCk.css', // 391b
+        'https://byteout.cn/static/js/regex-C5lHjF3B.js', // 368b
+        'https://byteout.cn/static/js/validate-CsbCFs9N.js', // 224b
+        // 'https://byteout.cn',
+
+
+        // 格子头像
+        'https://byteout.cn/api/files/view/file-view:fb448142-e999-4817-82d5-3decfbc9b3dd', // 84.8kb
+        'https://byteout.cn/api/files/view/file-view:58e949a8-9724-4341-95c5-b1cb143ffd50', // 8.7kb
+
+        // 默认头像
+        'https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg', // 10.5kb
+        'https://byteout.cn/static/svg/BOY_AVATAR_B-CR5P22fm.svg', // 9.6kb
+        'https://byteout.cn/static/svg/BOY_AVATAR_C-hTCJ7dni.svg',
+        'https://byteout.cn/static/svg/BOY_AVATAR_D-CfMmPNqg.svg',
+        'https://byteout.cn/static/svg/BOY_AVATAR_E-CzEj68GC.svg',
+        'https://byteout.cn/static/svg/BOY_AVATAR_F-DIybn7zB.svg',
+        'https://byteout.cn/static/svg/GIRL_AVATAR_A-BdT9bylP.svg',
+        'https://byteout.cn/static/svg/GIRL_AVATAR_B-C7gymNcu.svg',
+        'https://byteout.cn/static/svg/GIRL_AVATAR_C-n7d9tyQ2.svg',
+        'https://byteout.cn/static/svg/GIRL_AVATAR_D-DMkinRU_.svg',
+        'https://byteout.cn/static/svg/GIRL_AVATAR_E-D2gdy_fx.svg',
+        'https://byteout.cn/static/svg/GIRL_AVATAR_F-FiqFdHDk.svg'
+
+
+
+
+
+        // ooljc.com
+    ]
     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
 
     // const url = 'http://gongsikai.com'
@@ -819,6 +875,8 @@ const init = async () => {
             // aaa = generateRandomString(2097152);
             // aaa = generateRandomString(209715);
 
+            let index = 0;
+
             setInterval(async () => {
                 if (currentPage.isClosed()) return console.error('无法创建新页面');
                 // if (!currentPage) return console.error('无法创建新页面');
@@ -827,12 +885,17 @@ const init = async () => {
                 aaa = `${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`
                 // aaa = generateRandomString(2097152);
                 // aaa = generateRandomString(1097152);
+
+                index = urls[index] ? index + 1 : 0;
+
+                url = urls[index];
+                
                 t.params.aaa = aaa;
                 // t.params.bbb = aaa;
                 // console.log('params', t.params)
 
                 // const cookies = await currentPage.cookies();
-                const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aaa=${aaa}`, {
+                const responseBody = await currentPage.evaluate(rnnFunction, `${url}#${aaa}?aaa=${aaa}`, {
                     ...headers,
                     'req-device-fingerprint': Im(),
                     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
