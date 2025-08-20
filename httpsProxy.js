@@ -12,7 +12,7 @@ const getHTTPSProxy = async () => {
     let proxyAgent = null;
     try {
         res = await axios.get(locations.chongqing)
-        console.log('res', res)
+        // console.log('res', res)
         // console.log('r', res.data.data.proxy_list[0])
         // res = {"code":200,"msg":"成功","data":{"count":1,"filter_count":1,"surplus_quantity":0,"proxy_list":["110.53.250.157:25538"]}}
         const [ip, port] = (res || {})?.data?.data?.proxy_list[0]?.split(':')

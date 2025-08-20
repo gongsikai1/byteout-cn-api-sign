@@ -123,6 +123,7 @@ const init = async () => {
     
     // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
     let url = `https://byteout.cn/static/js/ant-Ceh_QTZw.js`
+    url = `https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
     let urls = [
         // byteout.cn
 
@@ -210,7 +211,8 @@ const init = async () => {
         i.push(`timestamp=${r}`, `nonce=${n}`);
         const c = i.join("&");
         return Object.values({
-            nonce: n,
+            // nonce: n,
+            nonce: Date.now() + Math.random(),
             timestamp: r,
             signature: ks.HmacSHA256(c, Kp).toString(ks.enc.Hex)
         }).join("/")
@@ -778,25 +780,27 @@ const init = async () => {
             const rnnFunction = async (url, headers) => {
                 try {
                     const reqSign = headers['req-signature'].replace(/\d{13}/, Date.now())
+                    const prev = headers['req-signature'].split('/')[1];
+                    const newHeaders = {
+                        ...headers,
+                        'req-signature': reqSign
+                    };
                     const res = await fetch(url, {
                         method: 'GET',
-                        headers: {
-                            ...headers,
-                            'req-signature': reqSign,
-                        },
+                        headers,
                         // credentials: 'omit'
                     });
                     console.log('res', res)
                     console.log('req', reqSign)
-                    console.log('prev', headers['req-signature'].split('/')[1])
+                    console.log('prev', prev)
                     const text = await res.text()
-                    return { text, status: res.status };
+                    return { url, text, status: res.status, res, reqSign, prev, newHeaders };
                 } catch (e) {
                     return `{ "error": "${e.message} ${JSON.stringify(e)}" }`;
                 }
             }
             let randomNumber = 101;
-            randomNumber = 1101 * 60;
+            // randomNumber = 1101 * 60;
             // 生成指定长度的随机字符串
             function generateRandomString(length) {
                 // 字符集：包含大小写字母、数字和常见特殊字符（共94个字符）
@@ -911,7 +915,8 @@ const init = async () => {
                 // console.log('params', t.params)
 
                 // const cookies = await currentPage.cookies();
-                const responseBody = await currentPage.evaluate(rnnFunction, `${url}#${aaa}?aaa=${aaa}`, {
+                // #${aaa}?aaa=${aaa}
+                const responseBody = await currentPage.evaluate(rnnFunction, `${url}`, {
                     ...headers,
                     'req-device-fingerprint': Im(),
                     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
