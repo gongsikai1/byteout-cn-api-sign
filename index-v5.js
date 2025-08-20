@@ -123,7 +123,7 @@ const init = async () => {
     
     // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
     let url = `https://byteout.cn/static/js/ant-Ceh_QTZw.js`
-    const urls = [
+    let urls = [
         // byteout.cn
 
         // 首页
@@ -178,6 +178,11 @@ const init = async () => {
 
         // ooljc.com
     ]
+
+    urls = [
+        'https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET'
+    ]
+    
     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
 
     // const url = 'http://gongsikai.com'
@@ -772,19 +777,26 @@ const init = async () => {
             // });
             const rnnFunction = async (url, headers) => {
                 try {
+                    const reqSign = headers['req-signature'].replace(/\d{13}/, Date.now())
                     const res = await fetch(url, {
                         method: 'GET',
-                        headers,
+                        headers: {
+                            ...headers,
+                            'req-signature': reqSign,
+                        },
                         // credentials: 'omit'
                     });
                     console.log('res', res)
+                    console.log('req', reqSign)
+                    console.log('prev', headers['req-signature'].split('/')[1])
                     const text = await res.text()
                     return { text, status: res.status };
                 } catch (e) {
                     return `{ "error": "${e.message} ${JSON.stringify(e)}" }`;
                 }
             }
-            const randomNumber = 101;
+            let randomNumber = 101;
+            randomNumber = 1101 * 60;
             // 生成指定长度的随机字符串
             function generateRandomString(length) {
                 // 字符集：包含大小写字母、数字和常见特殊字符（共94个字符）
@@ -886,9 +898,11 @@ const init = async () => {
                 // aaa = generateRandomString(2097152);
                 // aaa = generateRandomString(1097152);
 
-                index = urls[index] ? index + 1 : 0;
-
                 url = urls[index];
+
+                index = urls[index + 1] ? index + 1 : 0;
+
+                // url = urls[0]
 
                 console.log('url', url, index)
                 
