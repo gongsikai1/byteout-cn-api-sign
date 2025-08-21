@@ -6,6 +6,8 @@ var CryptoJS = require("crypto-js");
 
 const getHTTPSProxy = require('./httpsProxy');
 
+const getSignOoljc = require('./getSignOoljc');
+
 const app = new Koa();
 const router = new Router();
 
@@ -536,11 +538,18 @@ router.get('/sign', async (ctx) => {
     t.headers['Req-Signature'] = gg(t.params, t.data, newTimestamp, newNonce);
     t.headers["Req-Device-Fingerprint"] = Im();
 
+
+    const x_date = getSignOoljc.X_Date();
+    const x_fingerprint = getSignOoljc.X_Fingerprint();
+
     ctx.body = {
       status: 0,
       data: {
         'Req-Signature': t.headers['Req-Signature'],
-        'Req-Device-Fingerprint': t.headers["Req-Device-Fingerprint"]
+        'Req-Device-Fingerprint': t.headers["Req-Device-Fingerprint"],
+        'X-Fingerprint': x_fingerprint,
+        'X-Date': x_date,
+        'Authorization': getSignOoljc.Authorization(x_date, x_fingerprint)
       }
     };
     // const randomNumber = Math.floor(Math.random() * 3001) + 2000;

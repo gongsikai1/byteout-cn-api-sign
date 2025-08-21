@@ -124,6 +124,8 @@ const init = async () => {
     // const url = `https://byteout.cn/static/svg/BOY_AVATAR_A-BR_yOe4P.svg`
     let url = `https://byteout.cn/static/js/ant-Ceh_QTZw.js`
     url = `https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET`
+    url = `https://api.ooljc.com/auth/captcha`
+    // url = `https://byteout.cn/static/js/ant-Cg2vTT4h.js`
     let urls = [
         // byteout.cn
 
@@ -181,7 +183,9 @@ const init = async () => {
     ]
 
     urls = [
-        'https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET'
+        // 'https://byteout.cn/api/auth/sendMailCode/fl9420@qq.com/PASSWORD-RESET',
+        // `https://byteout.cn/static/js/ant-Cg2vTT4h.js`,
+        `https://api.ooljc.com/auth/captcha`
     ]
     
     // const url = 'https://ooljc.com/static/webp/background-BXWqynIs.webp'
@@ -781,6 +785,8 @@ const init = async () => {
                 try {
                     const reqSign = headers['req-signature'].replace(/\d{13}/, Date.now())
                     const prev = headers['req-signature'].split('/')[1];
+                    // const x_fingerprint = ooljcHeaders.X_Fingerprint();
+                    // const x_date = ooljcHeaders.X_Date()
                     const newHeaders = {
                         ...headers,
                         'req-signature': reqSign
@@ -916,12 +922,17 @@ const init = async () => {
 
                 // const cookies = await currentPage.cookies();
                 // #${aaa}?aaa=${aaa}
-                const responseBody = await currentPage.evaluate(rnnFunction, `${url}`, {
+
+                const x_fingerprint = ooljcHeaders.X_Fingerprint();
+                const x_date = ooljcHeaders.X_Date()
+
+                const responseBody = await currentPage.evaluate(rnnFunction, `${url}?aa=${aaa}`, {
                     ...headers,
                     'req-device-fingerprint': Im(),
                     'req-signature': gg(t.params, t.data, newTimestamp, newNonce),
-                    'X-Fingerprint': ooljcHeaders.X_Fingerprint(),
-                    'X-Date': ooljcHeaders.X_Date(),
+                    'X-Fingerprint': x_fingerprint,
+                    'X-Date': x_date,
+                    'Authorization': ooljcHeaders.Authorization(x_date, x_fingerprint),
                     'referer': `https://ooljc.com/article/manage?aaa=${aaa}`,
                     // 'cookie': cookie.map(c => `${c.name}=${c.value}`).join('; '),
                     'cookie': Object.entries(cookie).map(([name, value]) => `${name}=${value}`).join('; '),
